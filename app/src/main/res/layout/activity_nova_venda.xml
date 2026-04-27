@@ -7,4 +7,371 @@
     android:layout_height="match_parent"
     tools:context=".controller.NovaVendaActivity">
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Nova Venda"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="72dp"
+        android:padding="8dp"
+        android:shrinkColumns="1"
+        android:stretchColumns="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView">
+
+        <!-- Row 1: Bombom -->
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingVertical="8dp">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/bombom" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="Bombom"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/button_minus_1"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"
+                android:padding="0dp"
+                android:text="-"
+                android:textColor="@android:color/black"
+                app:backgroundTint="#a3f07f"
+                app:cornerRadius="8dp"
+                app:strokeWidth="0dp" />
+
+            <TextView
+                android:id="@+id/textView_qty_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:minWidth="24dp"
+                android:text="0"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/button_plus_1"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"
+                android:padding="0dp"
+                android:text="+"
+                android:textColor="@android:color/black"
+                app:backgroundTint="#a3f07f"
+                app:cornerRadius="8dp"
+                app:strokeWidth="0dp" />
+
+        </TableRow>
+
+        <!-- Row 2: Coxinha -->
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingVertical="8dp">
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/coxinha" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="Coxinha"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/button_minus_2"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"
+                android:padding="0dp"
+                android:text="-"
+                android:textColor="@android:color/black"
+                app:backgroundTint="#a3f07f"
+                app:cornerRadius="8dp"
+                app:strokeWidth="0dp" />
+
+            <TextView
+                android:id="@+id/textView_qty_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:minWidth="24dp"
+                android:text="0"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/button_plus_2"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"
+                android:padding="0dp"
+                android:text="+"
+                android:textColor="@android:color/black"
+                app:backgroundTint="#a3f07f"
+                app:cornerRadius="8dp"
+                app:strokeWidth="0dp" />
+        </TableRow>
+
+        <!-- Row 3: Pastel -->
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingVertical="8dp">
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/pastel" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="Pastel"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/button_minus_3"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"
+                android:padding="0dp"
+                android:text="-"
+                android:textColor="@android:color/black"
+                app:backgroundTint="#a3f07f"
+                app:cornerRadius="8dp"
+                app:strokeWidth="0dp" />
+
+            <TextView
+                android:id="@+id/textView_qty_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:minWidth="24dp"
+                android:text="0"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/button_plus_3"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"
+                android:padding="0dp"
+                android:text="+"
+                android:textColor="@android:color/black"
+                app:backgroundTint="#a3f07f"
+                app:cornerRadius="8dp"
+                app:strokeWidth="0dp" />
+
+        </TableRow>
+
+        <!-- Row 4: Café -->
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingVertical="8dp">
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/cafe" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="Café"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/button_minus_4"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"
+                android:padding="0dp"
+                android:text="-"
+                android:textColor="@android:color/black"
+                app:backgroundTint="#a3f07f"
+                app:cornerRadius="8dp"
+                app:strokeWidth="0dp" />
+
+            <TextView
+                android:id="@+id/textView_qty_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:minWidth="24dp"
+                android:text="0"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/button_plus_4"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"
+                android:padding="0dp"
+                android:text="+"
+                android:textColor="@android:color/black"
+                app:backgroundTint="#a3f07f"
+                app:cornerRadius="8dp"
+                app:strokeWidth="0dp" />
+        </TableRow>
+    </TableLayout>
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Itens"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/tableLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <Button
+        android:id="@+id/btnSalvar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Salvar"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        app:backgroundTint="#a3f07f"
+        app:cornerRadius="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/btnExcluir"
+        app:layout_constraintHorizontal_bias="0.426"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/btnExcluir" />
+
+    <Button
+        android:id="@+id/btnExcluir"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="52dp"
+        android:text="Excluir"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        app:backgroundTint="#a3f07f"
+        app:cornerRadius="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextSubtotal" />
+
+    <EditText
+        android:id="@+id/editTextNome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:ems="10"
+        android:hint="Nome"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tableLayout" />
+
+    <TextView
+        android:id="@+id/textView16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Total"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/editTextSubtotal"
+        app:layout_constraintHorizontal_bias="0.892"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/editTextSubtotal" />
+
+    <EditText
+        android:id="@+id/editTextSubtotal"
+        android:layout_width="144dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="100dp"
+        android:editable="false"
+        android:ems="10"
+        android:focusable="false"
+        android:inputType="text"
+        android:text="R$ 0,00"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextNome" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
