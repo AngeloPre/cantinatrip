@@ -34,6 +34,18 @@
         tools:itemCount="15"
         tools:listitem="@layout/recycler_view_item" />
 
+    <TextView
+        android:id="@+id/tvVazio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nenhuma venda registrada"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/vendasRV"
+        app:layout_constraintEnd_toEndOf="@+id/vendasRV"
+        app:layout_constraintStart_toStartOf="@+id/vendasRV"
+        app:layout_constraintTop_toTopOf="@+id/vendasRV" />
+
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
