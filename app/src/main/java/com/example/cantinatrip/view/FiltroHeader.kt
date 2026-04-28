@@ -13,6 +13,8 @@ class FiltroHeader(
     rootView: View,
     private val onFiltrosChanged: () -> Unit
 ) {
+    private data class FaixaValor(val label: String, val valorMinimo: Double)
+
     private val context = rootView.context
 
     private val btnIconBusca: ImageButton = rootView.findViewById(R.id.btnIconBusca)
@@ -25,18 +27,18 @@ class FiltroHeader(
     private val spinnerValor: Spinner = rootView.findViewById(R.id.spinnerValor)
 
     private val faixasValor = listOf(
-        "Todos os valores" to 0.0,
-        "Acima de R$ 10" to 10.0,
-        "Acima de R$ 20" to 20.0,
-        "Acima de R$ 50" to 50.0,
-        "Acima de R$ 100" to 100.0
+        FaixaValor("Todos os valores", 0.0),
+        FaixaValor("Acima de R$ 10", 10.0),
+        FaixaValor("Acima de R$ 20", 20.0),
+        FaixaValor("Acima de R$ 50", 50.0),
+        FaixaValor("Acima de R$ 100", 100.0)
     )
 
     val textoBusca: String
         get() = searchView.query?.toString().orEmpty()
 
-    var valorMinimoFiltro: Double = 0.0
-        private set
+    val valorMinimoFiltro: Double
+        get() = faixasValor[spinnerValor.selectedItemPosition].valorMinimo
 
     private var pronto = false
 
@@ -71,20 +73,21 @@ class FiltroHeader(
     }
 
     private fun configurarSpinner() {
+        val labels = faixasValor.map { it.label }
         val spinnerAdapter = ArrayAdapter(
             context,
             android.R.layout.simple_spinner_item,
-            faixasValor.map { it.first }
+            labels
         )
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerValor.adapter = spinnerAdapter
 
-        spinnerValor.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                valorMinimoFiltro = faixasValor[position].second
-                notificarMudanca()
-            }
+        spinnerValor.aoSelecionarItem { notificarMudanca() }
+    }
 
+    private fun Spinner.aoSelecionarItem(acao: () -> Unit) {
+        onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) = acao()
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
@@ -104,7 +107,6 @@ class FiltroHeader(
 
         searchView.setQuery("", false)
         spinnerValor.setSelection(0)
-        valorMinimoFiltro = 0.0
 
         notificarMudanca()
     }
