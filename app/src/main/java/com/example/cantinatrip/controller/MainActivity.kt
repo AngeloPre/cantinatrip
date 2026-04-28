@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun listarVendas() {
-        listaVendasFull = vendaDAO.getAllVendas()
+        listaVendasFull = vendaDAO.getAllOrdenado("nome")
         filtrar(searchView.query.toString())
     }
 
