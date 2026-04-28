@@ -30,17 +30,20 @@ class NovaVendaActivity : AppCompatActivity() {
     private lateinit var totalEditText: EditText
 
     private lateinit var btnSalvar: Button
-    private lateinit var btnExcluir: Button
+    private lateinit var btnAcaoSecundaria: Button
 
     private val quantities = mutableMapOf<Int, Int>()
 
     private lateinit var vendaDAO: VendaDAO
     private lateinit var itemVendaDAO: ItemVendaDAO
 
+    private var vendaIdEdicao: Int = -1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_nova_venda)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -50,7 +53,10 @@ class NovaVendaActivity : AppCompatActivity() {
         vendaDAO = VendaDAO(this)
         itemVendaDAO = ItemVendaDAO(this)
 
+        vendaIdEdicao = intent.getIntExtra("vendaId", -1)
+
         inicializarComponentes()
+        configurarModoTela()
         configurarAcoes()
         atualizarTotal()
     }
@@ -65,58 +71,55 @@ class NovaVendaActivity : AppCompatActivity() {
         totalEditText = findViewById(R.id.editTextSubtotal)
 
         btnSalvar = findViewById(R.id.btnSalvar)
-        btnExcluir = findViewById(R.id.btnExcluir)
+        btnAcaoSecundaria = findViewById(R.id.btnExcluir)
+    }
+
+    private fun configurarModoTela() {
+        if (vendaIdEdicao != -1) {
+            carregarDadosParaEdicao()
+            btnAcaoSecundaria.text = "Excluir"
+        } else {
+            btnAcaoSecundaria.text = "Cancelar"
+        }
+    }
+
+    private fun carregarDadosParaEdicao() {
+        val venda = vendaDAO.getVendaById(vendaIdEdicao)
+
+        if (venda != null) {
+            nomeEditText.setText(venda.nomeComprador)
+
+            val itens = itemVendaDAO.getByVendaId(vendaIdEdicao)
+
+            for (item in itens) {
+                quantities[item.produtoId] = item.quantidade
+
+                when (item.produtoId) {
+                    4 -> item1QtyText.text = item.quantidade.toString()
+                    1 -> item2QtyText.text = item.quantidade.toString()
+                    2 -> item3QtyText.text = item.quantidade.toString()
+                    3 -> item4QtyText.text = item.quantidade.toString()
+                }
+            }
+        }
     }
 
     private fun configurarAcoes() {
-        /*
-            IDs dos produtos:
-            1 = Coxinha
-            2 = Pastel
-            3 = Café
-            4 = Bombom
-
-            Layout:
-            linha 1 = Bombom
-            linha 2 = Coxinha
-            linha 3 = Pastel
-            linha 4 = Café
-        */
-
-        configurarContadorProduto(
-            productId = 4,
-            minusId = R.id.button_minus_1,
-            plusId = R.id.button_plus_1,
-            qtyTextView = item1QtyText
-        )
-
-        configurarContadorProduto(
-            productId = 1,
-            minusId = R.id.button_minus_2,
-            plusId = R.id.button_plus_2,
-            qtyTextView = item2QtyText
-        )
-
-        configurarContadorProduto(
-            productId = 2,
-            minusId = R.id.button_minus_3,
-            plusId = R.id.button_plus_3,
-            qtyTextView = item3QtyText
-        )
-
-        configurarContadorProduto(
-            productId = 3,
-            minusId = R.id.button_minus_4,
-            plusId = R.id.button_plus_4,
-            qtyTextView = item4QtyText
-        )
+        configurarContadorProduto(4, R.id.button_minus_1, R.id.button_plus_1, item1QtyText)
+        configurarContadorProduto(1, R.id.button_minus_2, R.id.button_plus_2, item2QtyText)
+        configurarContadorProduto(2, R.id.button_minus_3, R.id.button_plus_3, item3QtyText)
+        configurarContadorProduto(3, R.id.button_minus_4, R.id.button_plus_4, item4QtyText)
 
         btnSalvar.setOnClickListener {
             salvarVenda()
         }
 
-        btnExcluir.setOnClickListener {
-            finish()
+        btnAcaoSecundaria.setOnClickListener {
+            if (vendaIdEdicao != -1) {
+                excluirVenda()
+            } else {
+                finish()
+            }
         }
     }
 
@@ -126,7 +129,9 @@ class NovaVendaActivity : AppCompatActivity() {
         plusId: Int,
         qtyTextView: TextView
     ) {
-        quantities[productId] = 0
+        if (!quantities.containsKey(productId)) {
+            quantities[productId] = 0
+        }
 
         val btnMais = findViewById<Button>(plusId)
         val btnMenos = findViewById<Button>(minusId)
@@ -178,15 +183,10 @@ class NovaVendaActivity : AppCompatActivity() {
     }
 
     private fun salvarVenda() {
-        val nomeComprador = nomeEditText.text.toString().trim()
+        val nome = nomeEditText.text.toString().trim()
 
-        if (nomeComprador.isEmpty()) {
-            Toast.makeText(
-                this,
-                "O nome do comprador é obrigatório",
-                Toast.LENGTH_SHORT
-            ).show()
-
+        if (nome.isEmpty()) {
+            nomeEditText.error = "Obrigatório"
             nomeEditText.requestFocus()
             return
         }
@@ -194,70 +194,91 @@ class NovaVendaActivity : AppCompatActivity() {
         val itensSelecionados = buscarItensSelecionados()
 
         if (itensSelecionados.isEmpty()) {
-            Toast.makeText(
-                this,
-                "Selecione pelo menos um item",
-                Toast.LENGTH_SHORT
-            ).show()
-
+            Toast.makeText(this, "Selecione um item", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val valorTotalVenda = calcularTotal(itensSelecionados)
+        val totalFinal = calcularTotal(itensSelecionados)
 
         val dataHora = SimpleDateFormat(
             "yyyy-MM-dd HH:mm:ss",
             Locale.getDefault()
         ).format(Date())
 
-        val venda = Venda(
-            nomeComprador = nomeComprador,
+        if (vendaIdEdicao == -1) {
+            criarNovaVenda(nome, dataHora, totalFinal, itensSelecionados)
+        } else {
+            atualizarVendaExistente(nome, dataHora, totalFinal, itensSelecionados)
+        }
+    }
+
+    private fun criarNovaVenda(
+        nome: String,
+        dataHora: String,
+        totalFinal: Double,
+        itensSelecionados: Map<Int, Int>
+    ) {
+        val novaVenda = Venda(
+            nomeComprador = nome,
             dataHora = dataHora,
-            valorTotal = valorTotalVenda
+            valorTotal = totalFinal
         )
 
-        val vendaId = vendaDAO.addVenda(venda)
+        val vendaId = vendaDAO.addVenda(novaVenda)
 
         if (vendaId <= 0) {
-            Toast.makeText(
-                this,
-                "Erro ao salvar a venda no banco",
-                Toast.LENGTH_SHORT
-            ).show()
-
+            Toast.makeText(this, "Erro ao salvar a venda", Toast.LENGTH_SHORT).show()
             return
         }
 
+        salvarItensDaVenda(vendaId.toInt(), itensSelecionados)
+
+        Toast.makeText(this, "Venda registrada com sucesso", Toast.LENGTH_SHORT).show()
+        finish()
+    }
+
+    private fun atualizarVendaExistente(
+        nome: String,
+        dataHora: String,
+        totalFinal: Double,
+        itensSelecionados: Map<Int, Int>
+    ) {
+        val vendaEditada = Venda(
+            id = vendaIdEdicao,
+            nomeComprador = nome,
+            dataHora = dataHora,
+            valorTotal = totalFinal
+        )
+
+        val linhasAfetadas = vendaDAO.updateVenda(vendaEditada)
+
+        if (linhasAfetadas <= 0) {
+            Toast.makeText(this, "Erro ao atualizar a venda", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        itemVendaDAO.deleteByVendaId(vendaIdEdicao)
+        salvarItensDaVenda(vendaIdEdicao, itensSelecionados)
+
+        Toast.makeText(this, "Venda atualizada com sucesso", Toast.LENGTH_SHORT).show()
+        finish()
+    }
+
+    private fun salvarItensDaVenda(vendaId: Int, itensSelecionados: Map<Int, Int>) {
         for ((produtoId, quantidade) in itensSelecionados) {
             val produto = buscarProdutoPorId(produtoId)
 
-            if (produto == null) {
-                Toast.makeText(
-                    this,
-                    "Produto não encontrado",
-                    Toast.LENGTH_SHORT
-                ).show()
+            if (produto != null) {
+                val item = ItemVenda(
+                    vendaId = vendaId,
+                    produtoId = produtoId,
+                    quantidade = quantidade,
+                    subtotal = produto.valor * quantidade
+                )
 
-                return
+                itemVendaDAO.insert(item)
             }
-
-            val item = ItemVenda(
-                vendaId = vendaId.toInt(),
-                produtoId = produtoId,
-                quantidade = quantidade,
-                subtotal = produto.valor * quantidade
-            )
-
-            itemVendaDAO.insert(item)
         }
-
-        Toast.makeText(
-            this,
-            "Venda registrada com sucesso!",
-            Toast.LENGTH_SHORT
-        ).show()
-
-        finish()
     }
 
     private fun buscarItensSelecionados(): Map<Int, Int> {
@@ -280,5 +301,16 @@ class NovaVendaActivity : AppCompatActivity() {
         }
 
         return null
+    }
+
+    private fun excluirVenda() {
+        val linhasAfetadas = vendaDAO.deleteVenda(vendaIdEdicao)
+
+        if (linhasAfetadas > 0) {
+            Toast.makeText(this, "Excluído", Toast.LENGTH_SHORT).show()
+            finish()
+        } else {
+            Toast.makeText(this, "Erro ao excluir", Toast.LENGTH_SHORT).show()
+        }
     }
 }
