@@ -29,6 +29,8 @@ class NovaVendaActivity : AppCompatActivity() {
     private lateinit var nomeEditText: EditText
     private lateinit var totalEditText: EditText
 
+    private lateinit var tituloEditText: TextView
+
     private lateinit var btnSalvar: Button
     private lateinit var btnAcaoSecundaria: Button
 
@@ -66,6 +68,7 @@ class NovaVendaActivity : AppCompatActivity() {
         item2QtyText = findViewById(R.id.textView_qty_2)
         item3QtyText = findViewById(R.id.textView_qty_3)
         item4QtyText = findViewById(R.id.textView_qty_4)
+        tituloEditText = findViewById(R.id.textViewTitulo)
 
         nomeEditText = findViewById(R.id.editTextNome)
         totalEditText = findViewById(R.id.editTextSubtotal)
@@ -78,6 +81,7 @@ class NovaVendaActivity : AppCompatActivity() {
         if (vendaIdEdicao != -1) {
             carregarDadosParaEdicao()
             btnAcaoSecundaria.text = "Excluir"
+            tituloEditText.text = "Editar Venda"
         } else {
             btnAcaoSecundaria.text = "Cancelar"
         }
