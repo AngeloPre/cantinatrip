@@ -11,11 +11,16 @@ import com.example.cantinatrip.R
 import com.example.cantinatrip.model.Venda
 
 class VendasAdapter(
-    private val vendas: List<Venda>,
+    private var vendas: List<Venda>,
     private val context: Context,
     private val click: (Venda) -> Unit,
     private val previewProvider: (Venda) -> String = { "" }
 ) : RecyclerView.Adapter<VendasAdapter.VendasViewHolder>() {
+
+    fun updateList(newList: List<Venda>) {
+        vendas = newList
+        notifyDataSetChanged()
+    }
 
     inner class VendasViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val ivAvatar = itemView.findViewById<ImageView>(R.id.ivAvatarComprador)

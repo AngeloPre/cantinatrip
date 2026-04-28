@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -25,6 +26,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var itemVendaDAO: ItemVendaDAO
     private lateinit var recyclerViewVendas: RecyclerView
     private lateinit var tvVazio: TextView
+    private lateinit var searchView: SearchView
+    private lateinit var adapter: VendasAdapter
+    private var listaVendasFull: List<Venda> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,13 +43,38 @@ class MainActivity : AppCompatActivity() {
         vendaDAO = VendaDAO(this)
         itemVendaDAO = ItemVendaDAO(this)
 
+        tvVazio = findViewById(R.id.tvVazio)
         recyclerViewVendas = findViewById(R.id.vendasRV)
         recyclerViewVendas.layoutManager = LinearLayoutManager(this)
         recyclerViewVendas.setHasFixedSize(true)
         recyclerViewVendas.addItemDecoration(
             DividerItemDecoration(this, LinearLayoutManager.VERTICAL)
         )
-        tvVazio = findViewById(R.id.tvVazio)
+
+        adapter = VendasAdapter(
+            vendas = emptyList(),
+            context = this,
+            click = { venda ->
+                val intent = Intent(this, NovaVendaActivity::class.java).apply {
+                    putExtra("vendaId", venda.id)
+                }
+                startActivity(intent)
+            },
+            previewProvider = { venda -> montarPreview(venda) }
+        )
+        recyclerViewVendas.adapter = adapter
+
+        searchView = findViewById(R.id.searchView)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filtrar(newText)
+                return true
+            }
+        })
 
         val btnNovaVenda = findViewById<Button>(R.id.button)
         btnNovaVenda.setOnClickListener {
@@ -62,27 +91,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun listarVendas() {
-        val vendas = vendaDAO.getAllVendas()
+        listaVendasFull = vendaDAO.getAllVendas()
+        filtrar(searchView.query.toString())
+    }
 
-        if (vendas.isEmpty()) {
+    private fun filtrar(texto: String?) {
+        val listaFiltrada = if (texto.isNullOrEmpty()) {
+            listaVendasFull
+        } else {
+            listaVendasFull.filter { it.nomeComprador.contains(texto, ignoreCase = true) }
+        }
+
+        if (listaFiltrada.isEmpty()) {
             recyclerViewVendas.visibility = View.GONE
             tvVazio.visibility = View.VISIBLE
         } else {
             recyclerViewVendas.visibility = View.VISIBLE
             tvVazio.visibility = View.GONE
         }
-
-        recyclerViewVendas.adapter = VendasAdapter(
-            vendas = vendas,
-            context = this,
-            click = { venda ->
-                val intent = Intent(this, NovaVendaActivity::class.java).apply {
-                    putExtra("vendaId", venda.id)
-                }
-                startActivity(intent)
-            },
-            previewProvider = { venda -> montarPreview(venda) }
-        )
+        
+        adapter.updateList(listaFiltrada)
     }
 
     private fun montarPreview(venda: Venda): String {
