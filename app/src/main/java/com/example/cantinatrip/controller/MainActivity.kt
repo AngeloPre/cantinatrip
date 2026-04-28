@@ -7,7 +7,6 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -19,6 +18,7 @@ import com.example.cantinatrip.data.dao.ItemVendaDAO
 import com.example.cantinatrip.data.dao.VendaDAO
 import com.example.cantinatrip.model.Produto
 import com.example.cantinatrip.model.Venda
+import com.example.cantinatrip.view.FiltroHeader
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,8 +26,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var itemVendaDAO: ItemVendaDAO
     private lateinit var recyclerViewVendas: RecyclerView
     private lateinit var tvVazio: TextView
-    private lateinit var searchView: SearchView
     private lateinit var adapter: VendasAdapter
+    private lateinit var filtroHeader: FiltroHeader
+
     private var listaVendasFull: List<Venda> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,17 +65,10 @@ class MainActivity : AppCompatActivity() {
         )
         recyclerViewVendas.adapter = adapter
 
-        searchView = findViewById(R.id.searchView)
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                filtrar(newText)
-                return true
-            }
-        })
+        filtroHeader = FiltroHeader(
+            rootView = findViewById(R.id.main),
+            onFiltrosChanged = { aplicarFiltros() }
+        )
 
         val btnNovaVenda = findViewById<Button>(R.id.button)
         btnNovaVenda.setOnClickListener {
@@ -92,15 +86,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun listarVendas() {
         listaVendasFull = vendaDAO.getAllOrdenado("nome")
-        filtrar(searchView.query.toString())
+        aplicarFiltros()
     }
 
-    private fun filtrar(texto: String?) {
-        val listaFiltrada = if (texto.isNullOrEmpty()) {
-            listaVendasFull
-        } else {
-            listaVendasFull.filter { it.nomeComprador.contains(texto, ignoreCase = true) }
-        }
+    private fun aplicarFiltros() {
+        val texto = filtroHeader.textoBusca
+        val valorMinimo = filtroHeader.valorMinimoFiltro
+
+        val listaFiltrada = listaVendasFull
+            .filter { texto.isEmpty() || it.nomeComprador.contains(texto, ignoreCase = true) }
+            .filter { it.valorTotal >= valorMinimo }
 
         if (listaFiltrada.isEmpty()) {
             recyclerViewVendas.visibility = View.GONE
@@ -109,7 +104,7 @@ class MainActivity : AppCompatActivity() {
             recyclerViewVendas.visibility = View.VISIBLE
             tvVazio.visibility = View.GONE
         }
-        
+
         adapter.updateList(listaFiltrada)
     }
 

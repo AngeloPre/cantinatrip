@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">CantinaTrip</string>
+    <string name="hint_busca_nome">Busque pelo nome de um usuário</string>
+    <string name="hint_filtro_valor">Selecione o valor mínimo que deseja filtrar</string>
 </resources>

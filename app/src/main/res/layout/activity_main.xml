@@ -11,26 +11,132 @@
         android:id="@+id/mainTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="CantinaTrip"
         android:textSize="32sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.049" />
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- ============ Estado inicial: linha de 3 ícones ============ -->
+    <ImageButton
+        android:id="@+id/btnIconBusca"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Buscar por nome"
+        app:tint="?attr/colorPrimary"
+        app:layout_constraintEnd_toStartOf="@+id/btnIconValor"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainTitle"
+        app:srcCompat="@drawable/search" />
+
+    <ImageButton
+        android:id="@+id/btnIconValor"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Filtrar por valor"
+        app:tint="?attr/colorPrimary"
+        app:layout_constraintEnd_toStartOf="@+id/btnIconTodos"
+        app:layout_constraintStart_toEndOf="@+id/btnIconBusca"
+        app:layout_constraintTop_toBottomOf="@+id/mainTitle"
+        app:srcCompat="@drawable/money" />
+
+    <ImageButton
+        android:id="@+id/btnIconTodos"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Mostrar todos"
+        app:tint="?attr/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnIconValor"
+        app:layout_constraintTop_toBottomOf="@+id/mainTitle"
+        app:srcCompat="@drawable/users" />
+
+    <!-- ============ Estado filtro: hint + botões de retorno ============ -->
+    <TextView
+        android:id="@+id/tvHintFiltro"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/btnVoltarLimpar"
+        app:layout_constraintEnd_toStartOf="@+id/btnVoltarLimpar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/btnVoltarLimpar"
+        tools:text="Busque pelo nome de um usuário"
+        tools:visibility="visible" />
+
+    <ImageButton
+        android:id="@+id/btnVoltarLimpar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Voltar"
+        app:tint="?attr/colorPrimary"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@+id/btnTodosFiltro"
+        app:layout_constraintTop_toBottomOf="@+id/mainTitle"
+        app:srcCompat="@drawable/back" />
+
+    <ImageButton
+        android:id="@+id/btnTodosFiltro"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Mostrar todos"
+        app:tint="?attr/colorPrimary"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainTitle"
+        app:srcCompat="@drawable/users" />
+
+    <!-- ============ Inputs (alternativos pela visibilidade) ============ -->
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
         app:iconifiedByDefault="false"
-        app:queryHint="Pesquisar por nome..."
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mainTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/btnVoltarLimpar"
+        app:queryHint="Pesquisar por nome..." />
 
+    <Spinner
+        android:id="@+id/spinnerValor"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnVoltarLimpar" />
+
+    <!-- ============ Barreira pra anchor da lista ============ -->
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/headerBarrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierAllowsGoneWidgets="false"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="btnIconBusca,btnIconValor,btnIconTodos,btnVoltarLimpar,btnTodosFiltro,searchView,spinnerValor" />
+
+    <!-- ============ Lista ============ -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/vendasRV"
         android:layout_width="0dp"
@@ -42,7 +148,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchView"
+        app:layout_constraintTop_toBottomOf="@+id/headerBarrier"
         tools:itemCount="15"
         tools:listitem="@layout/recycler_view_item" />
 
