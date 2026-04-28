@@ -82,6 +82,19 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        val btnTotal = findViewById<Button>(R.id.buttonTotal)
+        btnTotal.setOnClickListener {
+            val listaVendas = vendaDAO.getAllVendas()
+            val totalDinheiro = listaVendas.sumOf { it.valorTotal }
+            val totalQuantidade = listaVendas.size
+
+            val intent = Intent(this, TotalActivity::class.java).apply {
+                putExtra("totalDinheiro", totalDinheiro)
+                putExtra("totalQuantidade", totalQuantidade)
+            }
+            startActivity(intent)
+        }
+
         listarVendas()
     }
 
